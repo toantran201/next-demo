@@ -31,6 +31,9 @@ const Posts = ({posts}: PostsProps) => {
           </Link>
         </li>
       </ul>
+      <Link href='/'>
+        <a style={{color: 'blue', textDecoration: 'underline'}}>Back to Home &#8594;</a>
+      </Link>
     </div>
   )
 }
