@@ -29,7 +29,7 @@ const Post = ({post}: PostProps) => {
 
 export default Post
 
-export const getStaticPaths = async () => {
+export async function getStaticPaths() {
   const ids = await fetchPopularPostIds()
   console.log('ids', ids)
   const paths = ids.map(item => ({
@@ -38,13 +38,13 @@ export const getStaticPaths = async () => {
 
   return {
     paths,
-    fallback: true
+    fallback: 'blocking'
   }
 }
 
-export const getStaticProps = async (context: GetStaticPropsContext) => {
+export async function getStaticProps(context: GetStaticPropsContext) {
   const params = context.params!
-  if (!params.id){
+  if (!params.id) {
     return {
       notFound: true
     }

@@ -1,12 +1,17 @@
-import {GetServerSideProps} from "next";
-import {Post} from "~/models/common";
 import Link from "next/link";
+import {Post} from "~/models/common";
 
-interface PostsProps {
-  posts: Post[]
-}
+// interface PostsProps {
+//   posts: Post[]
+// }
 
-const Posts = ({posts}: PostsProps) => {
+const Posts = () => {
+  const posts: Post[] = new Array(102).fill(null).map((item, index) => ({
+    id: index,
+    userId: 1,
+    body: `body ${index}`,
+    title: `title ${index}`
+  }))
   return (
     <div>
       <h1>Posts</h1>
@@ -14,9 +19,9 @@ const Posts = ({posts}: PostsProps) => {
         {
           posts.map(item => (
             <li key={item.id}>
-              <Link href={'/posts/[id]'} as={`/posts/${item.id}`}>
-                <a>{item.title}</a>
-              </Link>
+              <a href={`/posts/${item.id}`}>
+                {item.title}
+              </a>
             </li>
           ))
         }
@@ -40,12 +45,12 @@ const Posts = ({posts}: PostsProps) => {
 
 export default Posts
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const response = await fetch('https://jsonplaceholder.typicode.com/posts')
-  const data = await response.json()
-  return {
-    props: {
-      posts: data
-    }
-  }
-}
+// export const getServerSideProps: GetServerSideProps = async () => {
+//   const response = await fetch('https://jsonplaceholder.typicode.com/posts')
+//   const data = await response.json()
+//   return {
+//     props: {
+//       posts: data
+//     }
+//   }
+// }
