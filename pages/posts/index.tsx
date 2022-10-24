@@ -6,11 +6,11 @@ import {Post} from "~/models/common";
 // }
 
 const Posts = () => {
-  const posts: Post[] = new Array(102).fill(null).map((item, index) => ({
-    id: index,
+  const posts: Post[] = new Array(100).fill(null).map((item, index) => ({
+    id: index + 1,
     userId: 1,
-    body: `body ${index}`,
-    title: `title ${index}`
+    body: `body ${index + 1}`,
+    title: `title ${index + 1}`
   }))
   return (
     <div>
@@ -19,19 +19,21 @@ const Posts = () => {
         {
           posts.map(item => (
             <li key={item.id}>
-              <a href={`/posts/${item.id}`}>
-                {item.title}
-              </a>
+              <Link href={'/posts/[id]'} as={`/posts/${item.id}`} prefetch={false}>
+                <a>
+                  {item.title}
+                </a>
+              </Link>
             </li>
           ))
         }
         <li>
-          <Link href={'/posts/[id]'} as={`/posts/101`}>
+          <Link href={'/posts/[id]'} as={`/posts/101`} prefetch={false}>
             <a>Page 101</a>
           </Link>
         </li>
         <li>
-          <Link href={'/posts/[id]'} as={`/posts/102`}>
+          <Link href={'/posts/[id]'} as={`/posts/102`} prefetch={false}>
             <a>Page 102</a>
           </Link>
         </li>
