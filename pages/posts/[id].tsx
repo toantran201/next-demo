@@ -3,6 +3,7 @@ import {GetStaticPropsContext} from "next";
 import dayjs from "dayjs";
 import {useRouter} from "next/router";
 import Link from "next/link";
+import {fetchPopularPostIds, fetchPost} from "~/fake-api";
 
 interface PostProps {
   post: Post
@@ -26,12 +27,13 @@ const Post = ({post}: PostProps) => {
   )
 }
 
-export const getStaticPaths = async () => {
-  const response = await fetch('https://jsonplaceholder.typicode.com/posts')
-  const data: Post[] = await response.json()
+export default Post
 
-  const paths = data.map(item => ({
-    params: {id: item.id.toString()}
+export const getStaticPaths = async () => {
+  const ids = await fetchPopularPostIds()
+  console.log('ids', ids)
+  const paths = ids.map(item => ({
+    params: {id: item.toString()}
   }))
 
   return {
@@ -42,27 +44,12 @@ export const getStaticPaths = async () => {
 
 export const getStaticProps = async (context: GetStaticPropsContext) => {
   const params = context.params!
-  let data: Post
-  if (params.id == "101") {
-    data = await new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({
-          id: 101,
-          title: 'Post 101',
-          body: 'Body 101',
-          userId: 1
-        })
-      }, 2000)
-    })
-  } else {
-    const response = await fetch(`https://jsonplaceholder.typicode.com/posts/${params.id}`)
-    data = await response.json()
-  }
-  if(!data.id) {
+  if (!params.id){
     return {
       notFound: true
     }
   }
+  const data = await fetchPost(+params.id)
 
   return {
     props: {
@@ -71,5 +58,3 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
   }
 
 }
-
-export default Post
