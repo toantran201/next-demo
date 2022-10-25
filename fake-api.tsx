@@ -1,4 +1,4 @@
-import {Post} from "~/models/common";
+import {Post} from "~/models/commons";
 
 export const fetchPopularPostIds = () => {
   return new Promise<number[]>(resolve => {

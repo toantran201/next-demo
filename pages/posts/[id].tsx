@@ -1,9 +1,9 @@
-import {Post} from "~/models/common";
+import {Post} from "~/models/commons";
 import {GetStaticPropsContext} from "next";
 import dayjs from "dayjs";
 import {useRouter} from "next/router";
 import Link from "next/link";
-import {fetchPopularPostIds, fetchPost} from "~/fake-api";
+import {fetchPopularPostIds} from "~/fake-api";
 
 interface PostProps {
   post: Post
@@ -31,7 +31,6 @@ export default Post
 
 export async function getStaticPaths() {
   const ids = await fetchPopularPostIds()
-  console.log('ids', ids)
   const paths = ids.map(item => ({
     params: {id: item.toString()}
   }))
@@ -49,12 +48,12 @@ export async function getStaticProps(context: GetStaticPropsContext) {
       notFound: true
     }
   }
-  const data = await fetchPost(+params.id)
-
+  const response = await fetch(`http://localhost:5000/posts/${params.id}`)
+  const data = await response.json()
   return {
     props: {
       post: data,
-    }
+    },
+    revalidate: 10
   }
-
 }

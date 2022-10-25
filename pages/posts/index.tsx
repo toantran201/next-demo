@@ -1,17 +1,15 @@
+import {GetServerSideProps} from "next";
 import Link from "next/link";
-import {Post} from "~/models/common";
+//
+import {Post} from "~/models/commons";
+import {NextPageWithLayout} from "~/models/apps";
+import {PostListLayout} from "~/src/layouts";
 
-// interface PostsProps {
-//   posts: Post[]
-// }
+interface PostsProps {
+  posts: Post[]
+}
 
-const Posts = () => {
-  const posts: Post[] = new Array(100).fill(null).map((item, index) => ({
-    id: index + 1,
-    userId: 1,
-    body: `body ${index + 1}`,
-    title: `title ${index + 1}`
-  }))
+const Posts: NextPageWithLayout<PostsProps> = ({posts}) => {
   return (
     <div>
       <h1>Posts</h1>
@@ -27,16 +25,6 @@ const Posts = () => {
             </li>
           ))
         }
-        <li>
-          <Link href={'/posts/[id]'} as={`/posts/101`} prefetch={false}>
-            <a>Page 101</a>
-          </Link>
-        </li>
-        <li>
-          <Link href={'/posts/[id]'} as={`/posts/102`} prefetch={false}>
-            <a>Page 102</a>
-          </Link>
-        </li>
       </ul>
       <Link href='/'>
         <a style={{color: 'blue', textDecoration: 'underline'}}>Back to Home &#8594;</a>
@@ -47,12 +35,20 @@ const Posts = () => {
 
 export default Posts
 
-// export const getServerSideProps: GetServerSideProps = async () => {
-//   const response = await fetch('https://jsonplaceholder.typicode.com/posts')
-//   const data = await response.json()
-//   return {
-//     props: {
-//       posts: data
-//     }
-//   }
-// }
+export const getStaticProps: GetServerSideProps = async () => {
+  const response = await fetch('http://localhost:5000/posts')
+  const data = await response.json()
+  return {
+    props: {
+      posts: data
+    },
+    revalidate: 10
+  }
+}
+
+Posts.getLayout = (page) => {
+  return <PostListLayout>
+    {page}
+  </PostListLayout>
+}
+
